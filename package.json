@@ -2,9 +2,9 @@
   "name": "nest-graphql",
   "version": "0.0.1",
   "description": "",
-  "author": "",
+  "author": "SoraKumo <info@croud.jp>",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
@@ -69,5 +69,7 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
-  }
+  },
+  "main": "dist/main.js",
+  "repository": "https://github.com/SoraKumo001/nest-graphql"
 }
