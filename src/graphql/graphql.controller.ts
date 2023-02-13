@@ -1,5 +1,12 @@
 import { promises as fs } from 'fs';
-import { All, Controller, Req, Res } from '@nestjs/common';
+import {
+  All,
+  Controller,
+  Req,
+  Res,
+  OnModuleInit,
+  OnModuleDestroy,
+} from '@nestjs/common';
 import { ApolloServer } from '@apollo/server';
 import {
   executeHTTPGraphQLRequest,
@@ -46,21 +53,26 @@ export const resolvers = {
   },
 };
 
-const apolloServer = new ApolloServer({
-  typeDefs,
-  resolvers,
-});
-
-apolloServer.start();
-
 @Controller('/graphql')
-export class GraphqlController {
+export class GraphqlController implements OnModuleInit, OnModuleDestroy {
+  apolloServer: ApolloServer;
+  onModuleInit() {
+    console.log('init');
+    this.apolloServer = new ApolloServer({
+      typeDefs,
+      resolvers,
+    });
+    return this.apolloServer.start();
+  }
+  onModuleDestroy() {
+    this.apolloServer.stop();
+  }
   @All()
   async graphql(@Req() req: Request, @Res() res: Response) {
     await executeHTTPGraphQLRequest({
       req,
       res,
-      apolloServer,
+      apolloServer: this.apolloServer,
       context: async () => ({ req: Raw(req), res: Raw(res) }),
       options: {
         //Maximum upload file size set at 10 MB
